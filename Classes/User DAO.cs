@@ -50,5 +50,16 @@ namespace ConsoleEx01._0._0.Classes
                 db.ExcCommand(strQuery);
             }
         }
+
+        public void Delete(User user)
+        {
+            using (db = new Database())
+            {
+                var strQuery = string.Format("delete from tb_liaUsuario where IdUsu = {0}", user.idUsu);
+                db.ExcCommand(strQuery);
+            }
+        }
+
+        //public void
     }
 }
