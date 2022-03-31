@@ -60,6 +60,32 @@ namespace ConsoleEx01._0._0.Classes
             }
         }
 
-        //public void
+        public List<User> List()
+        {
+            using(db = new Database())
+            {
+                var strQuery = "select * from tb_liaUsuario;";
+                var results = db.Return(strQuery);
+                return ListUsers(results);
+            }
+        }
+
+        public List<User> ListUsers(MySqlDataReader results)
+        {
+            var users = new List<User>();
+            while(results.Read())
+            {
+                var TempUsers = new User()
+                {
+                    idUsu = int.Parse(results["IdUsu"].ToString()),
+                    NomeUsu = results["NomeUsu"].ToString(),
+                    Cargo = results["Cargo"].ToString(),
+                    DtNasc = DateTime.Parse(results["DtNasc"].ToString())
+                };
+                users.Add(TempUsers);
+            }
+            results.Close();
+            return users;
+        }
     }
 }

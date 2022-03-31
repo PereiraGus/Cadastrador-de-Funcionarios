@@ -17,27 +17,16 @@ namespace ConsoleEx01._0._0
             bool cont = true;
             bool aswered = false;
 
-            try
-            {
-                //conecc.Open();
-                Console.WriteLine("Conectado!");
-                Console.WriteLine(" ");
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Não foi possível se conectar ao banco de dados");
-                cont = false;
-                Console.ReadLine();
-            }
+            var userDAO = new UserDAO();
 
             while (cont == true)
             {
-                Console.WriteLine("Bonsoir! Escolha a operação que deseja fazer:");
-                Console.WriteLine("1 - Simples verificação de registros (●'◡'●)");
-                Console.WriteLine("2 - Adicionar pessoinhas ＼(((￣(￣(￣▽￣)￣)￣)))／");
-                Console.WriteLine("3 - Alterar alguém!!!! φ(゜▽゜*)♪");
-                Console.WriteLine("4 - DELETAR ALGUÉM! ┌( ಠ_ಠ)┘");
-                Console.WriteLine("5 - Sair ＞︿＜");
+                Console.WriteLine("Bonsoir! Escolha a operação que deseja fazer:" +
+                                    "\n 1 - Simples verificação de registros" +
+                                    "\n 2 - Adicionar pessoinhas" +
+                                    "\n 3 - Alterar alguém!!!!" +
+                                    "\n 4 - DELETAR ALGUÉM!" +
+                                    "\n 5 - Sair");
                 string selOpt = Console.ReadLine();
                 bool needsCheck = true;
 
@@ -51,18 +40,17 @@ namespace ConsoleEx01._0._0
                         cont = false;
                         break;
                     case "1":
-                        string seeUser = "Select * from tb_liaUsuario";
-                        MySqlDataReader read = database.Return(seeUser);
-                        Console.WriteLine("===================== Dados dos Clientes =====================");
-                        Console.WriteLine(" ");
-                        while (read.Read())
+                        var reader = userDAO.List();
+                        
+                        Console.WriteLine("===================== Dados dos Clientes =====================\n");
+                        foreach (var users in reader)
                         {
-                            Console.WriteLine("Cliente número {0}:", read["IdUsu"]);
-                            Console.WriteLine("Nome: {0}, Cargo: {1}, Data: {2}",
-                                read["NomeUsu"], read["Cargo"], read["DtNasc"]);
+                            Console.WriteLine("Cliente número {0}:\nNome: {0}, Cargo: {1}, Data: {2}",
+                                users.idUsu, users.NomeUsu, users.Cargo, users.DtNasc);
                         }
+                        Console.WriteLine("\n");
                         Console.ReadLine();
-                        read.Close();
+
                         needsCheck = false;
                         break;
                     case "2":
@@ -78,19 +66,18 @@ namespace ConsoleEx01._0._0
                         new UserDAO().Insert(user);
                         break;
                     case "3":
-                        Console.WriteLine("Apenas lembrando:");
+                        Console.WriteLine("Apenas lembrando:\n");
 
-                        string checkUser = "Select * from tb_liaUsuario";
-                        MySqlDataReader reader = database.Return(checkUser);
-                        Console.WriteLine("===================== Dados dos Clientes =====================");
-                        Console.WriteLine(" ");
-                        while (reader.Read())
+                        var checker = userDAO.List();
+
+                        Console.WriteLine("===================== Dados dos Clientes =====================\n");
+                        foreach (var users in checker)
                         {
-                            Console.WriteLine("Cliente número {0}:", reader["IdUsu"]);
-                            Console.WriteLine("Nome: {0}, Cargo: {1}, Data: {2}",
-                                reader["NomeUsu"], reader["Cargo"], reader["DtNasc"]);
+                            Console.WriteLine("Cliente número {0}:\nNome: {0}, Cargo: {1}, Data: {2}",
+                                users.idUsu, users.NomeUsu, users.Cargo, users.DtNasc);
                         }
-                        reader.Close();
+                        Console.WriteLine("\n");
+                        Console.ReadLine();
 
                         Console.WriteLine("Digite o ID do usuário que deseja alterar (❁´◡`❁)");
                         user.idUsu = Convert.ToInt32(Console.ReadLine());
@@ -109,37 +96,31 @@ namespace ConsoleEx01._0._0
                     case "4":
                         Console.WriteLine("Apenas lembrando:");
 
-                        string checkUs = "Select * from tb_liaUsuario";
-                        MySqlDataReader checker = database.Return(checkUs);
-                        Console.WriteLine("===================== Dados dos Clientes =====================");
-                        Console.WriteLine(" ");
-                        while (checker.Read())
-                        {
-                            Console.WriteLine("Cliente número {0}:", checker["IdUsu"]);
-                            Console.WriteLine("Nome: {0}, Cargo: {1}, Data: {2}",
-                                checker["NomeUsu"], checker["Cargo"], checker["DtNasc"]);
-                        }
-                        checker.Close();
-                        Console.WriteLine("Digite o ID do usuário que deseja deletar (❁´◡`❁)");
-                        string idCheckUsu = Console.ReadLine();
+                        var seer = userDAO.List();
 
-                        string delUser = string.Format("delete from tb_liaUsuario where IdUsu = {0}",
-                        idCheckUsu);
+                        Console.WriteLine("===================== Dados dos Clientes =====================");
+                        foreach (var users in seer)
+                        {
+                            Console.WriteLine("Cliente número {0}:\nNome: {0}, Cargo: {1}, Data: {2}\n",
+                                users.idUsu, users.NomeUsu, users.Cargo, users.DtNasc);
+                        }
+                        Console.WriteLine("\nDigite o ID do usuário que deseja deletar (❁´◡`❁)");
+                        user.idUsu = Convert.ToInt32(Console.ReadLine());
+
+                        new UserDAO().Delete(user);
                         break;
                 }
                 if (needsCheck == true)
                 {
-                    string postCheck = "Select * from tb_liaUsuario";
-                    MySqlDataReader postChecker = database.Return(postCheck);
-                    Console.WriteLine("===================== Dados atualizados dos Clientes =====================");
-                    Console.WriteLine(" ");
-                    while (postChecker.Read())
+                    var post = userDAO.List();
+
+                    Console.WriteLine("===================== Dados dos Clientes =====================");
+                    foreach (var users in post)
                     {
-                        Console.WriteLine("Cliente número {0}:", postChecker["IdUsu"]);
-                        Console.WriteLine("Nome: {0}, Cargo: {1}, Data: {2}",
-                            postChecker["NomeUsu"], postChecker["Cargo"], postChecker["DtNasc"]);
+                        Console.WriteLine("Cliente número {0}:\nNome: {0}, Cargo: {1}, Data: {2}\n",
+                            users.idUsu, users.NomeUsu, users.Cargo, users.DtNasc);
                     }
-                    postChecker.Close();
+                    Console.WriteLine("\n");
                 }
                 while (aswered == false)
                 {
@@ -163,7 +144,5 @@ namespace ConsoleEx01._0._0
                 }
             }
         }
-
     }
-
 }
