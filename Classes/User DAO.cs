@@ -25,26 +25,14 @@ namespace ConsoleEx01._0._0.Classes
 
         public void Update(User user)
         {
-            string checkifexists = "Select * from tb_liaUsuario";
             db = new Database();
-            MySqlDataReader checker = db.Return(checkifexists);
 
             string strQuery = "";
-
-            if (checker.Read() == false)
-            {
                 strQuery += "update tb_liaUsuario set ";
                 strQuery += string.Format("NomeUsu =  '{0}', ", user.NomeUsu);
                 strQuery += string.Format("Cargo = '{0}', ", user.Cargo);
                 strQuery += string.Format("DtNasc = str_to_date('{0}', '%d/%m/%Y %T') ", user.DtNasc);
                 strQuery += string.Format("where IdUsu = {0}", user.idUsu);
-            }
-            else
-            {
-                strQuery += string.Format("insert into tb_liaUsuario values(default, '{0}', '{1}', STR_TO_DATE('{2}', '%d/%m/%Y %T'))",
-                            user.NomeUsu, user.Cargo, user.DtNasc);
-            }
-
             using (db = new Database())
             {
                 db.ExcCommand(strQuery);
@@ -65,6 +53,15 @@ namespace ConsoleEx01._0._0.Classes
             using(db = new Database())
             {
                 var strQuery = "select * from tb_liaUsuario;";
+                var results = db.Return(strQuery);
+                return ListUsers(results);
+            }
+        }
+        public List<User> ListSameId(int IdUsu)
+        {
+            using (db = new Database())
+            {
+                var strQuery = String.Format("select * from tb_liaUsuario where IdUsu = {0};",IdUsu);
                 var results = db.Return(strQuery);
                 return ListUsers(results);
             }

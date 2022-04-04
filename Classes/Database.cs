@@ -16,22 +16,7 @@ namespace ConsoleEx01._0._0.Classes
         public Database()
         {
             connec = new MySqlConnection(ConfigurationManager.ConnectionStrings["connec"].ConnectionString);
-            bool firsttry = true;
-            if (firsttry == true)
-            {
-                try
-                {
-                    connec.Open();
-                    Console.WriteLine("Conectado!");
-                    Console.WriteLine(" ");
-                    firsttry = false;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Não foi possível se conectar ao banco de dados");
-                    Console.ReadLine();
-                }
-            }
+            connec.Open();
         }
 
         public void ExcCommand(string StrQuery)
